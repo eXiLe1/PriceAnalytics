@@ -8,11 +8,79 @@ namespace PriceAnalysis
 {
     class Program
     {
-        static float Multiplier = 0.9F;
+        static int CurrentPrice;
+        static int OriginalPrice;
+        static float LastMultiplierUsed = 0.4F;
 
         static void Main(string[] args)
         {
-            AnalysePrices();
+            ShowMenu();
+            Console.ReadLine();
+            //AnalysePrices();
+        }
+
+        static void ShowMenu()
+        {
+            Console.WriteLine("--------------------------");
+            Console.WriteLine("1) Get new price from two months ");
+            Console.WriteLine("--------------------------");
+            var MenuOptionSelected = Console.ReadLine();
+            switch (MenuOptionSelected)
+            {
+                case "1":
+                    OptionOne();
+                    break;
+                default:
+                    Console.WriteLine("Please choose an option from the menu");
+                    break;
+            }
+        }
+
+        static void OptionOne()
+        {
+            Console.WriteLine("Enter price per night for month one.");
+            Console.Write("- ");
+            OriginalPrice = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("--------------------------");
+            Console.WriteLine("1) Increase price");
+            Console.WriteLine("2) Increase price less");
+            Console.WriteLine("--------------------------");
+            var MenuOptionSelected = Console.ReadLine();
+            switch (MenuOptionSelected)
+            {
+                case "1":
+                    IncreasePrice();
+                    OptionOne();
+                    break;
+                case "2":
+                    IncreasePriceLess();
+                    OptionOne();
+                    break;
+                default:
+                    Console.WriteLine("Please choose an option from the menu");
+                    break;
+            }
+        }
+
+        static void IncreasePrice()
+        {
+            CurrentPrice = OriginalPrice;
+            CurrentPrice = (int)Math.Round(CurrentPrice + (LastMultiplierUsed * CurrentPrice));
+            Console.WriteLine("It is recommended you change the price from £" + OriginalPrice + " to £" + CurrentPrice + ".");
+        }
+
+        static void IncreasePriceLess()
+        {
+            LastMultiplierUsed = LastMultiplierUsed / 2;
+            CurrentPrice = (int)Math.Round(OriginalPrice + (LastMultiplierUsed * OriginalPrice));
+            Console.WriteLine("Multiplier used:" + LastMultiplierUsed);
+            Console.WriteLine("It is recommended you change the price from £" + OriginalPrice + " to £" + CurrentPrice + ".");
+        }
+
+        static void DecreasePrice()
+        {
+
         }
 
         static void AnalysePrices()
@@ -63,12 +131,6 @@ namespace PriceAnalysis
                     Console.WriteLine("Week bookings have gone down. \nPrevious: " + PreviousWeeks + "\nCurrent: " + CurrentWeeks);
                 }
             }
-        }
-
-        static int DecreasePrice(int price)
-        {
-            var New = price * Multiplier;
-            return (int)Math.Ceiling(New);
         }
 
         static string[] GetInformation(string[] list)
