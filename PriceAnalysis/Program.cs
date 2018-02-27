@@ -12,18 +12,15 @@ namespace PriceAnalysis
 
         static void Main(string[] args)
         {
+            AnalysePrices();
+        }
+
+        static void AnalysePrices()
+        {
             string[] input1 = new string[9];
             string[] input2 = new string[9];
             input1 = GetInformation(input1);
-            foreach (string item in input1)
-            {
-                Console.WriteLine(item);
-            }
             input2 = GetInformation(input2);
-            foreach (string item in input2)
-            {
-                Console.WriteLine(item);
-            }
             ComparePreviousYear(input1, input2);
             Console.ReadLine();
         }
@@ -38,16 +35,26 @@ namespace PriceAnalysis
                     var PreviousNights = int.Parse(Previous[3]);
                     var CurrentNights = int.Parse(Current[3]);
                     Console.WriteLine("Night bookings have gone down. \nPrevious: "+ PreviousNights +"\nCurrent: "+ CurrentNights);
-                    if (Current[8] == "Increase")
+                    /*if (Current[8] == "Increase")
                     {
                         var MultiplierUsed = float.Parse(Current[7]);
                         var FixedPrice = int.Parse(Previous[5]) / (MultiplierUsed - (MultiplierUsed * .1));
                         Console.WriteLine("" + MultiplierUsed, int.Parse(Previous[5]), float.Parse(Current[7]));
                         FixedPrice = (int)Math.Ceiling(FixedPrice);
                         Console.WriteLine("It is recommended you change the price from £" + Current[5] + " to £" + FixedPrice + ".");
+                    }*/
+                    if (Current[8] == "Increase")
+                    {
+                        var MultiplierUsed = float.Parse(Current[7]);
+                        var MultiplierToUse = MultiplierUsed / 2;
+                        var FixedPrice = int.Parse(Previous[5]) + (int.Parse(Previous[5]) * MultiplierToUse);
+                        Console.WriteLine("Multiplier used:" + MultiplierToUse);
+                        FixedPrice = (int)Math.Ceiling(FixedPrice);
+                        Console.WriteLine("It is recommended you change the price from £" + Current[5] + " to £" + FixedPrice + ".");
                     }
-                    var NewPrice = DecreasePrice(int.Parse(Current[5]));
-                    Console.WriteLine("It is recommended you change the price from £" + Current[5] + " to £" + NewPrice + ".");
+                    AnalysePrices();
+                    //var NewPrice = DecreasePrice(int.Parse(Current[5]));
+                    //Console.WriteLine("It is recommended you change the price from £" + Current[5] + " to £" + NewPrice + ".");
                 }
                 else if (int.Parse(Current[4]) < int.Parse(Previous[4]))
                 {
